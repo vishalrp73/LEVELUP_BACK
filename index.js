@@ -58,7 +58,7 @@ app.post('/login', function (req, res) {
         } else {
             const passCheck = bcrypt.compareSync(plainPass, result[0].password);
             if (passCheck) {
-                res.status(200).send('Login successful')
+                res.status(200).send(result)
             } else {
                 res.status(401).send('Login unsuccessful')
             }
