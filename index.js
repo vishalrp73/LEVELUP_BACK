@@ -1,6 +1,7 @@
 const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
+const bcrypt = require('bcrypt');
 
 const app = express();
 app.use(cors());
@@ -30,6 +31,40 @@ app.get('/users', (req, res) => {
         }
     })
 });
+
+/* LOGIN AND SIGNUP ENDPOINTS */
+
+app.post('/signup', (req, res) => {
+    const hashPass = bcrypt.hashSync(req.body.password, 12);
+
+    db.query('INSERT INTO users SET ?', { email: req.body.email, password: hashPass }, function (err) {
+        if (err) {
+            console.log(err)
+        } else {
+            console.log('Data inserted into database')
+            res.status(201).send('Successful sign up')
+        }
+    })
+})
+
+app.post('/login', function (req, res) {
+
+    const plainPass = req.body.password
+
+    db.query(`SELECT * FROM users WHERE email = ?`, [req.body.email], (err, result) => {
+        console.log(result)
+        if (result.length <= 0) {
+            res.status(401).send('Login failed')
+        } else {
+            const passCheck = bcrypt.compareSync(plainPass, result[0].password);
+            if (passCheck) {
+                res.status(200).send('Login successful')
+            } else {
+                res.status(401).send('Login unsuccessful')
+            }
+        }
+    })
+})
 
 
 
