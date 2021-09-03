@@ -76,6 +76,16 @@ app.get('/vishal', function (req, res) {
     })
 })
 
+app.post('/auth', function (req, res) {
+    db.query(`SELECT * FROM users WHERE user_id = ?`, [req.body.id], (err, result) => {
+        if (err) {
+            console.log(err)
+        } else {
+            res.send(result)
+        }
+    })
+})
+
 
 
 /* PROGRESS TRACKER AND STUDENT PROFILES ENDPOINTS */
