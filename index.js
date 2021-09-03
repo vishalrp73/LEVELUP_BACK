@@ -66,6 +66,16 @@ app.post('/login', function (req, res) {
     })
 })
 
+app.get('/vishal', function (req, res) {
+    db.query('SELECT * FROM users where user_id = 18', function (err, result) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.send(result);
+        }
+    })
+})
+
 
 
 /* PROGRESS TRACKER AND STUDENT PROFILES ENDPOINTS */
