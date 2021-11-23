@@ -2,15 +2,16 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const bcrypt = require('bcrypt');
+const dotenv = require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const db = mysql.createConnection({
-    host: "database-1.cznv306sxvoj.ap-southeast-2.rds.amazonaws.com",
-    user: "admin",
-    password: "admin123",
+    host: process.env.HOST_STRING,
+    user: process.env.USER_STRING,
+    password: process.env.PASS_STRING,
     database: "missionx"
 });
 
@@ -36,6 +37,8 @@ app.get('/users', (req, res) => {
 
 app.post('/signup', (req, res) => {
     const hashPass = bcrypt.hashSync(req.body.password, 12);
+
+    console.log('signup endpoint triggered')
 
     db.query('INSERT INTO users SET ?', { email: req.body.email, password: hashPass }, function (err) {
         if (err) {
